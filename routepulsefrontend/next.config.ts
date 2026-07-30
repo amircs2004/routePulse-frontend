@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+ env : {
+ url_base: "https://newhopoe.vercel.app"
+
+ }
 };
 
 export default nextConfig;
