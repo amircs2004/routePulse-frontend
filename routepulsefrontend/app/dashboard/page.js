@@ -22,7 +22,8 @@ export default function DashBOARD() {
       if (responce && responce.data) {
         setUser(responce.data);
       } else {
-        router.push('/login');
+        //for now i am pushing into /auth because i still havent worked on the log page
+        router.push('/auth');
       }
       setLoading(false);
     });

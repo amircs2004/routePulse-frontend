@@ -1,8 +1,8 @@
 
 //get all products form the api 
-const getAllProducts = async () => {
+export const getAllProducts = async () => {
   try {
-      const responce = await fetch('https://dummyjson.com/products/categories') 
+      const responce = await fetch('https://dummyjson.com/products/') 
       if (!responce.ok) {
         console.log('error at fetching products ');
       }
