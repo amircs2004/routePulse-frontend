@@ -1,8 +1,9 @@
 'use client' 
 //this page will be the fronend of orsers and routes
+import  OrdersPage from '../../../components/ordersAndRoutes'
 
 export default function viewOrdersAndRoutes () {
   return (
-    <p>soon ur be able to see ur ordzers and routes </p>
+    <OrdersPage />
   )
 }

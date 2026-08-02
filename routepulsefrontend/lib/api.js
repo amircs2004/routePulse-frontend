@@ -92,3 +92,43 @@ export const deleteProductFromOrderApi = async (productId) => {
         console.log(error);
     }
 }
+
+export const getAllOrders = async () => {
+    try{
+        const token = sessionStorage.getItem('token')
+    const response = await fetch(`${process.env.url_base}/api/get-orders` , {
+        method : 'GET' , 
+        headers : {
+            'Content-Type' : 'application/json' , 
+            'Authorization' : `Bearer ${token}`
+        }
+    })
+    const data = await response.json()
+    return data
+    }catch(error){
+    console.log(error);
+    }
+}
+
+export const handleUpdateQuantity = async (productid , orderId , update) => {
+    try{
+        const token = sessionStorage.getItem('token')
+     const response = await fetch(`${process.env.url_base}/api/update-product-quantity/${productid}` , {
+        method:'PATCH' , 
+         headers : {
+            'Content-Type' : 'application/json' ,
+            'Authorization' : `Bearer ${token}`
+         },
+        body : JSON.stringify({ orderId , update})
+        })
+        if (!response.ok) {
+            throw new Error('Failed to update quantity');
+        }
+        const data = await response.json()
+         return data 
+    }catch(error){
+        console.log(error);
+        console.log('error at updaing the the quantity probabmy server side error ');
+        
+    }
+}
