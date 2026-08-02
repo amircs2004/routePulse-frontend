@@ -61,19 +61,49 @@ export default function OrdersPage() {
     fetchOrdersWithProducts();
   }, []);
 
-  const handleDeleteProduct = async (productId) => {
+const handleDeleteProduct = async (productId) => {
     console.log("DELETE CLICKED FOR ID:", productId);
     try {
       setDeletingId(productId);
       const result = await deleteProductFromOrderApi(productId);
       console.log("DEBUG: deleteProductFromOrderApi response:", result);
-      if (result && result.success) {
+      
+      if (result && result.success && result.data) {
+        const updatedOrder = result.data;
+        
+        // Re-enrich the items array with product details so they don't go blank
+        if (updatedOrder.items) {
+          const enrichedItems = await Promise.all(
+            updatedOrder.items.map(async (item) => {
+              const existingOrder = orders.find(o => o._id === updatedOrder._id);
+              const existingItem = existingOrder?.items?.find(i => (i.productId || i._id || i.id) === (item.productId || item._id || item.id));
+              
+              if (existingItem && existingItem.title && existingItem.title !== "Unknown Product") {
+                return { ...item, title: existingItem.title, price: existingItem.price, thumbnail: existingItem.thumbnail };
+              }
+
+              try {
+                const productData = await getOneProductById(item.productId);
+                return {
+                  ...item,
+                  title: productData?.title || "Unknown Product",
+                  price: productData?.price || 0,
+                  thumbnail: productData?.thumbnail || productData?.images?.[0] || "",
+                };
+              } catch (err) {
+                return item;
+              }
+            })
+          );
+          updatedOrder.items = enrichedItems;
+        }
+
         setOrders((prevOrders) =>
           prevOrders.map((order) =>
-            order._id === result.data._id ? result.data : order,
+            order._id === updatedOrder._id ? updatedOrder : order
           ),
         );
-        console.log("DEBUG: Orders state updated successfully after deletion.");
+        console.log("DEBUG: Orders state updated successfully after deletion with enriched data.");
       }
     } catch (err) {
       console.error("DEBUG: Failed to delete product", err);
@@ -81,6 +111,7 @@ export default function OrdersPage() {
       setDeletingId(null);
     }
   };
+
 const handleQuantityUpdate = async (orderId, productId, change) => {
     console.log("DEBUG: Quantity update triggered | orderId:", orderId, "| productId:", productId, "| change:", change);
     try {
