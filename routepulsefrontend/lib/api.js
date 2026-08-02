@@ -110,7 +110,7 @@ export const getAllOrders = async () => {
     }
 }
 
-export const handleUpdateQuantity = async (productid , orderId , update) => {
+export const handleUpdateQuantity = async (productid , orderId , change) => {
     try{
         const token = sessionStorage.getItem('token')
      const response = await fetch(`${process.env.url_base}/api/update-product-quantity/${productid}` , {
@@ -119,7 +119,7 @@ export const handleUpdateQuantity = async (productid , orderId , update) => {
             'Content-Type' : 'application/json' ,
             'Authorization' : `Bearer ${token}`
          },
-        body : JSON.stringify({ orderId , update})
+        body : JSON.stringify({ orderId , change})
         })
         if (!response.ok) {
             throw new Error('Failed to update quantity');

@@ -81,8 +81,7 @@ export default function OrdersPage() {
       setDeletingId(null);
     }
   };
-
-  const handleQuantityUpdate = async (orderId, productId, change) => {
+const handleQuantityUpdate = async (orderId, productId, change) => {
     console.log("DEBUG: Quantity update triggered | orderId:", orderId, "| productId:", productId, "| change:", change);
     try {
       setUpdatingId(productId);
@@ -90,14 +89,42 @@ export default function OrdersPage() {
       console.log("DEBUG: handleUpdateQuantity response:", result);
 
       if (result && result.order) {
+        // Re-enrich the updated order's items with product details (title, price, thumbnail)
+        const updatedOrder = result.order;
+        if (updatedOrder.items) {
+          const enrichedItems = await Promise.all(
+            updatedOrder.items.map(async (item) => {
+              // Try to find existing item details first to avoid unnecessary refetches
+              const existingOrder = orders.find(o => o._id === updatedOrder._id);
+              const existingItem = existingOrder?.items?.find(i => (i.productId || i._id || i.id) === (item.productId || item._id || item.id));
+              
+              if (existingItem && existingItem.title && existingItem.title !== "Unknown Product") {
+                return { ...item, title: existingItem.title, price: existingItem.price, thumbnail: existingItem.thumbnail };
+              }
+
+              // Fallback fetch if not found
+              try {
+                const productData = await getOneProductById(item.productId);
+                return {
+                  ...item,
+                  title: productData?.title || "Unknown Product",
+                  price: productData?.price || 0,
+                  thumbnail: productData?.thumbnail || productData?.images?.[0] || "",
+                };
+              } catch (err) {
+                return item;
+              }
+            })
+          );
+          updatedOrder.items = enrichedItems;
+        }
+
         setOrders((prevOrders) =>
           prevOrders.map((order) =>
-            order._id === result.order._id ? result.order : order
+            order._id === updatedOrder._id ? updatedOrder : order
           )
         );
-        console.log("DEBUG: Orders state updated successfully after quantity change.");
-      } else {
-        console.log("DEBUG: Quantity update returned unexpected structure:", result);
+        console.log("DEBUG: Orders state updated successfully with enriched data.");
       }
     } catch (err) {
       console.error("DEBUG: Error updating product quantity:", err);
