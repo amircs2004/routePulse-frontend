@@ -2,7 +2,7 @@
 //get all products form the api 
 export const getAllProducts = async () => {
   try {
-      const responce = await fetch('https://dummyjson.com/products/') 
+      const responce = await fetch('https://dummyjson.com/products?limit=0') 
       if (!responce.ok) {
         console.log('error at fetching products ');
       }
@@ -33,7 +33,7 @@ export const getOneProductById = async (id) =>  {
 //get all categories 
 
 
-const getAllCategories = async () => {
+export const getAllCategories = async () => {
        try {
        
       

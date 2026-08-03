@@ -1,11 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
-// Fix for missing default marker icons in Next.js/React Leaflet
 const customIcon = new L.Icon({
   iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
@@ -15,37 +14,61 @@ const customIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
-export default function DeliveryMap({ center = [36.7538, 30.5833], zoom = 13, markers = [] }) {
+function LocationClickHandler({ onLocationSelect }) {
+  useMapEvents({
+    async click(e) {
+      const { lat, lng } = e.latlng;
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+        const data = await res.json();
+        const formattedAddress = data.display_name || "Selected Location";
+
+        if (onLocationSelect) {
+          onLocationSelect({ lat, lng, address: formattedAddress });
+        }
+      } catch (err) {
+        console.error("Failed to fetch address details", err);
+        if (onLocationSelect) {
+          onLocationSelect({ lat, lng, address: "Custom Location" });
+        }
+      }
+    },
+  });
+
+  return null;
+}
+
+export default function DeliveryMap({ center = [36.7538, 3.0588], zoom = 13, markers = [], onLocationSelect }) {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // Prevent server-side rendering mismatch
   if (!isMounted) {
     return (
-      <div className="w-full h-[400px] bg-[#FAFAFC] rounded-3xl border border-gray-100 flex items-center justify-center text-xs text-gray-400">
+      <div className="w-full h-[550px] bg-[#FAFAFC] rounded-3xl border border-gray-100 flex items-center justify-center text-xs text-gray-400">
         Loading Map...
       </div>
     );
   }
 
   return (
-    <div className="w-full h-[400px] rounded-3xl overflow-hidden border border-gray-100 shadow-xs z-10">
+    // Increased height to h-[550px] for a much larger map view
+    <div className="w-full h-[550px] rounded-3xl overflow-hidden border border-gray-100 shadow-xs z-10 relative">
       <MapContainer 
         center={center} 
         zoom={zoom} 
         scrollWheelZoom={false} 
         className="w-full h-full"
       >
-        {/* Clean, eye-friendly light map tile layer */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {/* Render dynamic markers passed into the component */}
+        <LocationClickHandler onLocationSelect={onLocationSelect} />
+
         {markers.map((marker, index) => (
           <Marker key={index} position={marker.position} icon={customIcon}>
             {marker.popupText && (

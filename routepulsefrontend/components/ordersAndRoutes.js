@@ -349,6 +349,15 @@ const handleQuantityUpdate = async (orderId, productId, change) => {
           </div>
         )}
       </div>
+      <div className="flex items-center justify-between pt-4 border-t border-gray-50 mt-4">
+    <span className="text-xs text-gray-400">Ready to finalize your purchase?</span>
+    <a
+      href="https://routefrontend.vercel.app/checkout"
+      className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-xs transition-all flex items-center gap-1.5"
+    >
+      Terminate Order <span>→</span>
+    </a>
+  </div>
     </div>
   );
 }
