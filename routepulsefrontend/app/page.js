@@ -1,16 +1,17 @@
 "use client";
-import { useState, useEffect } from "react";
+
 import {
   getOneProductById,
   getAllProducts,
   getAllCategories,
+
 } from "../lib/productsApi";
-import { addProductToOrder, deleteProductFromOrderApi } from "../lib/api";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import CategoryFilter from "../components/categoryFilter";
-import PromoBanner from "../components/PromoBanner";
 
-
-export default function CustomerDashboard() {
+export default function Home() {
+  const router = useRouter();
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -18,22 +19,21 @@ export default function CustomerDashboard() {
   const [selectedCategory, setSelectedCategory] = useState("all");
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
+  
+      const fetchProducts = async () => {
+          try {
         const data = await getAllProducts();
         const categoriesData = await getAllCategories();
         setProducts(data.products || data || []);
         setCategories(categoriesData || []);
-      } catch (error) {
-        console.log("Error fetching products", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
+        }  catch (error) {
+      console.log("Error fetching products", error);
+    } finally {
+      setLoading(false);
+    }
+      };
+    fetchProducts()
+  } , []);
 
   const handleProductClick = async (id) => {
     try {
@@ -50,57 +50,19 @@ export default function CustomerDashboard() {
     }
   };
 
-  const handleConfirmAddToCart = async (product) => {
-    try {
-      setLoading(true);
-
-      const productId = product._id || product.id;
-      const productPayload = {
-        productId: productId,
-        title: product.title,
-        price: product.price,
-        thumbnail: product.thumbnail || product.images?.[0],
-        category: product.category,
-      };
-
-      await addProductToOrder(productPayload);
-      alert("ok");
-
-      setSelectedProduct(null);
-    } catch (error) {
-      console.log("Error adding product to order", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const HandleDeleteProductFromOrrder = async (productId) => {
-    try {
-      const response = await deleteProductFromOrderApi(productId);
-      if (response) {
-        alert("product deleted from order");
-      } else {
-        alert("failed to delete product from order");
+     const handleConfirmAddToCart = async (product) => {
+      const token = sessionStorage.getItem('token') 
+      if (!token) {
+        router.push('/dashboard')
       }
-    } catch (error) {
-      console.log("Error deleting product from order", error);
-    }
-  };
-
-  // Filter products dynamically based on the selected category
+     };
   const filteredProducts =
     selectedCategory === "all"
       ? products
       : products.filter((product) => product.category === selectedCategory);
-
   return (
-    <main className="relative min-h-screen w-full bg-[#FAFBF9] text-slate-800 flex flex-col overflow-hidden font-sans">
+     <main className="relative min-h-screen w-full bg-[#FAFBF9] text-slate-800 flex flex-col overflow-hidden font-sans">
   {/* Decorative Ambient Background Glows */}
-  {/* the mother fucking  banner is in here if u want to change the contenue just go where the file is located*/}
-   <PromoBanner onExplore={() => {
-      // Scroll smoothly down to product catalog or trigger a filter change
-      window.scrollTo({ top: 400, behavior: 'smooth' });
-    }} />
   <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-100/50 rounded-full blur-3xl pointer-events-none -z-10" />
   <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-lime-100/40 rounded-full blur-3xl pointer-events-none -z-10" />
 
@@ -133,58 +95,49 @@ export default function CustomerDashboard() {
 
       {/* Dynamic Product Grid with Vertical Scroll */}
       <div className="mt-6 max-h-[550px] sm:max-h-[650px] overflow-y-auto pr-1 sm:pr-2">
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
-    {filteredProducts.map((product) => {
-      const prodId = product._id || product.id;
-      const prodImage = product.thumbnail || product.images?.[0];
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
+          {filteredProducts.map((product) => {
+            const prodId = product._id || product.id;
+            const prodImage = product.thumbnail || product.images?.[0];
 
-      return (
-        <div
-          key={prodId}
-          onClick={() => handleProductClick(prodId)}
-          className="group relative p-3.5 rounded-2xl bg-white border border-stone-200/80 hover:border-[#65795C]/60 hover:shadow-xl hover:shadow-[#65795C]/5 cursor-pointer transition-all duration-300 flex flex-col justify-between overflow-hidden"
-        >
-          <div>
-            {/* Image Container with Floating Badge */}
-            {prodImage && (
-              <div className="relative w-full h-40 sm:h-44 bg-stone-50/80 rounded-xl overflow-hidden mb-3 border border-stone-100 flex items-center justify-center p-3">
-                <span className="absolute top-2.5 left-2.5 z-10 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-900 bg-white/90 backdrop-blur-md rounded-md shadow-sm border border-emerald-100">
-                  {product.category || "Item"}
-                </span>
-                <img
-                  src={prodImage}
-                  alt={product.title}
-                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 ease-out"
-                />
+            return (
+              <div
+                key={prodId}
+                onClick={() => handleProductClick(prodId)}
+                className="group relative p-4 rounded-2xl bg-white border border-stone-200/70 hover:border-[#65795C]/50 hover:shadow-xl hover:shadow-stone-900/5 cursor-pointer transition-all duration-300 flex flex-col justify-between overflow-hidden"
+              >
+                <div>
+                  {prodImage && (
+                    <div className="relative w-full h-32 sm:h-36 bg-stone-50 rounded-xl overflow-hidden mb-3.5 border border-stone-100 flex items-center justify-center">
+                      <img
+                        src={prodImage}
+                        alt={product.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                      />
+                    </div>
+                  )}
+
+                  <span className="inline-block px-2.5 py-0.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50/80 rounded-md border border-emerald-200/60 mb-1.5">
+                    {product.category || "Aisle Item"}
+                  </span>
+                  <p className="font-bold text-slate-900 text-sm sm:text-base group-hover:text-[#65795C] transition-colors truncate">
+                    {product.title}
+                  </p>
+                </div>
+
+                <div className="flex justify-between items-center mt-3 sm:mt-4 pt-3 border-t border-stone-100">
+                  <span className="text-xs sm:text-sm font-bold text-[#65795C]">
+                    ${product.price}
+                  </span>
+                  <span className="text-[11px] sm:text-xs font-medium text-stone-400 group-hover:text-[#65795C] group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
+                    View Details &rarr;
+                  </span>
+                </div>
               </div>
-            )}
-
-            {/* Fallback category if no image */}
-            {!prodImage && (
-              <span className="inline-block px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50/80 rounded-md border border-emerald-200/60 mb-1.5">
-                {product.category || "Aisle Item"}
-              </span>
-            )}
-
-            <p className="font-semibold text-slate-800 text-sm sm:text-base group-hover:text-[#65795C] transition-colors line-clamp-2 px-1">
-              {product.title}
-            </p>
-          </div>
-
-          {/* Footer Price & Action Button */}
-          <div className="flex justify-between items-center mt-4 pt-3 px-1 border-t border-stone-100">
-            <span className="text-sm sm:text-base font-bold text-slate-900">
-              ${product.price}
-            </span>
-            <span className="text-xs font-medium text-[#65795C] bg-[#65795C]/10 px-2.5 py-1 rounded-lg group-hover:bg-[#65795C] group-hover:text-white transition-all duration-300 flex items-center gap-1">
-              View &rarr;
-            </span>
-          </div>
+            );
+          })}
         </div>
-      );
-    })}
-  </div>
-</div>
+      </div>
     </div>
 
     {/* POPUP CARD MODAL */}
@@ -256,4 +209,8 @@ export default function CustomerDashboard() {
   </div>
 </main>
   );
+  
+
+  
+    
 }

@@ -43,7 +43,7 @@ const login = async (data) => {
 }
  
 
-export const addProductToOrder = async (ProductData) => {
+export  const addProductToOrder = async (ProductData) => {
     try {
        const token = sessionStorage.getItem('token')
         const response = await fetch(`${process.env.url_base}/api/add-product` , { 
@@ -132,3 +132,20 @@ export const handleUpdateQuantity = async (productid , orderId , change) => {
         
     }
 }
+export const confirmOrder = async (orderDetails) => {
+    try {
+     const token = sessionStorage.getItem('token')
+     const response = await fetch(`${process.env.url_base}/api/confirm-order` , {
+        method : 'POST' , 
+        headers : {
+            'Content-Type' : 'application/json' ,
+            'Authorization' : `Bearer ${token}`
+        } ,
+        body : JSON.stringify(orderDetails)
+     })
+     return await response.json()
+    }catch(error){
+        console.log("Confirm Order Frontend Error:", error);
+    }
+}
+

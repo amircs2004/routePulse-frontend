@@ -3,16 +3,18 @@ import { useState } from 'react';
 
 export function Footer() {
   return (
-    <footer className="border-t border-gray-200 bg-white py-4 sm:py-6 px-4 sm:px-6 text-center md:text-left flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 gap-3 md:gap-0">
-      <p>2026 RoutePulse & Smart Supermarket System. All rights reserved.</p>
-      <div className="flex flex-wrap justify-center gap-4 sm:space-x-6">
-        <a href="#" className="hover:text-gray-900 transition-colors">
+    <footer className="border-t border-stone-200/60 bg-white/50 backdrop-blur-md py-5 px-6 sm:px-8 text-center md:text-left flex flex-col md:flex-row justify-between items-center text-xs text-stone-500 gap-4">
+      <p className="font-medium">
+        © 2026 <span className="text-stone-700 font-semibold">RoutePulse</span> & Smart Supermarket System. All rights reserved.
+      </p>
+      <div className="flex items-center space-x-6 font-medium">
+        <a href="#" className="hover:text-orange-600 transition-colors">
           Privacy Policy
         </a>
-        <a href="#" className="hover:text-gray-900 transition-colors">
+        <a href="#" className="hover:text-orange-600 transition-colors">
           Terms of Service
         </a>
-        <a href="#" className="hover:text-gray-900 transition-colors">
+        <a href="#" className="hover:text-orange-600 transition-colors">
           Support
         </a>
       </div>
@@ -27,67 +29,72 @@ export function Sidebar({ isOpen, onClose }) {
       {isOpen && (
         <div 
           onClick={onClose}
-          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs md:hidden transition-opacity"
+          className="fixed inset-0 z-40 bg-stone-900/40 backdrop-blur-sm md:hidden transition-opacity"
         />
       )}
 
-      {/* Sidebar Container (Responsive Drawer for mobile, sticky flex for desktop) */}
+      {/* Sidebar Container */}
       <aside className={`
-        fixed inset-y-0 left-0 z-50 w-64 border-r border-gray-200 bg-white p-4 sm:p-6 flex flex-col min-h-screen shrink-0 transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:min-h-[calc(100vh-4rem)]
-        ${isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'}
+        fixed inset-y-0 left-0 z-50 w-68 border-r border-stone-200/80 bg-white/95 backdrop-blur-xl p-5 sm:p-6 flex flex-col min-h-screen shrink-0 transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:min-h-[calc(100vh-4rem)] shadow-xl md:shadow-none
+        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
-        {/* Mobile Close Button Header */}
-        <div className="flex items-center justify-between md:hidden mb-6 pb-4 border-b border-gray-100">
-          <div className="flex items-center space-x-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white font-bold text-sm">
+        {/* Mobile Close Header */}
+        <div className="flex items-center justify-between md:hidden mb-6 pb-4 border-b border-stone-100">
+          <div className="flex items-center space-x-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-amber-600 text-white font-bold text-xs shadow-md shadow-orange-500/20">
               RP
             </div>
-            <span className="font-bold text-gray-900">Navigation</span>
+            <span className="font-bold text-stone-900 text-sm tracking-tight">Navigation</span>
           </div>
           <button 
             onClick={onClose}
-            className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
+            className="p-1.5 rounded-lg text-stone-400 hover:bg-stone-100 hover:text-stone-700 transition-colors"
           >
             ✕
           </button>
         </div>
 
-        <div className="space-y-1">
-          <p className="px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">
-            Menu
+        {/* Navigation Menu Links */}
+        <div className="space-y-1.5">
+          <p className="px-3 text-[11px] font-bold uppercase tracking-wider text-stone-400 mb-3">
+            Platform Menu
           </p>
+          
           <a
             href="/dashboard"
             onClick={onClose}
-            className="flex items-center space-x-3 rounded-lg bg-indigo-50 px-3.5 py-2.5 text-sm font-medium text-indigo-600 transition-colors"
+            className="group relative flex items-center space-x-3 rounded-xl bg-orange-50/80 px-3.5 py-2.5 text-sm font-semibold text-orange-950 transition-all border border-orange-200/50 shadow-xs"
           >
-            <span>📊</span>
+            <span className="text-base">📊</span>
             <span>Dashboard</span>
+            <div className="absolute right-3 w-1.5 h-1.5 rounded-full bg-orange-500" />
           </a>
+
           <a
             href="/dashboard/ordersAndRoutes"
             onClick={onClose}
-            className="flex items-center space-x-3 rounded-lg px-3.5 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+            className="group flex items-center space-x-3 rounded-xl px-3.5 py-2.5 text-sm font-medium text-stone-600 hover:bg-stone-100/70 hover:text-stone-900 transition-all"
           >
-            <span>📦</span>
+            <span className="text-base group-hover:scale-110 transition-transform">📦</span>
             <span>Orders & Routes</span>
           </a>
 
           <a
             href="/dashboard/settings"
             onClick={onClose}
-            className="flex items-center space-x-3 rounded-lg px-3.5 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+            className="group flex items-center space-x-3 rounded-xl px-3.5 py-2.5 text-sm font-medium text-stone-600 hover:bg-stone-100/70 hover:text-stone-900 transition-all"
           >
-            <span>⚙️</span>
+            <span className="text-base group-hover:scale-110 transition-transform">⚙️</span>
             <span>Settings</span>
           </a>
         </div>
 
-        <div className="mt-auto pt-6 border-t border-gray-100">
-          <div className="rounded-xl bg-gray-50 p-4 border border-gray-200/60">
-            <p className="text-xs font-semibold text-gray-900">Need Help?</p>
-            <p className="text-xs text-gray-500 mt-0.5">
-              Check system documentation or dispatcher support.
+        {/* Bottom Help Card */}
+        <div className="mt-auto pt-6 border-t border-stone-100">
+          <div className="rounded-2xl bg-gradient-to-br from-stone-50 to-orange-50/30 p-4 border border-stone-200/60 shadow-xs">
+            <p className="text-xs font-bold text-stone-900">Dispatcher Support</p>
+            <p className="text-[11px] text-stone-500 mt-1 leading-relaxed">
+              Need assistance with live route tracking? Check the docs.
             </p>
           </div>
         </div>
@@ -98,32 +105,40 @@ export function Sidebar({ isOpen, onClose }) {
 
 export function Header({ onMenuClick }) {
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-gray-200 bg-white/80 px-4 sm:px-6 backdrop-blur-md">
-      <div className="flex items-center space-x-3">
-        {/* Mobile Hamburger Menu Trigger */}
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-stone-200/80 bg-white/80 px-4 sm:px-8 backdrop-blur-xl shadow-xs">
+      <div className="flex items-center space-x-3.5">
+        {/* Mobile Hamburger Trigger */}
         <button
           onClick={onMenuClick}
-          className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors focus:outline-hidden"
+          className="md:hidden p-2 rounded-xl text-stone-600 hover:bg-stone-100 transition-colors focus:outline-none"
           aria-label="Open Menu"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
 
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600 text-white font-bold shadow-sm shrink-0">
-          RP
+        <div className="flex items-center space-x-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-amber-600 text-white font-bold text-sm shadow-md shadow-orange-500/20">
+            RP
+          </div>
+          <div>
+            <span className="text-sm sm:text-base font-extrabold tracking-tight text-stone-900 block leading-tight">
+              RoutePulse
+            </span>
+            <span className="text-[10px] font-medium text-stone-400 tracking-wider uppercase block">
+              Logistics & Fleet
+            </span>
+          </div>
         </div>
-        <span className="text-base sm:text-lg font-bold tracking-tight text-gray-900 truncate">
-          RoutePulse
-        </span>
       </div>
 
-      <div className="flex items-center space-x-4">
-        <span className="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 border border-emerald-200">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span>
+      <div className="flex items-center space-x-3">
+        {/* Online Status Pill */}
+        <div className="inline-flex items-center rounded-full bg-emerald-50/80 px-3 py-1 text-xs font-semibold text-emerald-700 border border-emerald-200/70 shadow-2xs backdrop-blur-xs">
+          <span className="h-2 w-2 rounded-full bg-emerald-500 mr-2 animate-pulse shadow-xs shadow-emerald-500/50"></span>
           System Online
-        </span>
+        </div>
       </div>
     </header>
   );
