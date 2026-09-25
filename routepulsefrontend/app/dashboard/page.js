@@ -4,6 +4,7 @@ import { useState, useEffect, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Sidebar, Header, Footer } from '../../components/siteAnatomy';
 import CustomerDashboard from '../../components/CustomerView';
+import DriverView from '../../components/driverview'
 
 export default function DashBOARD() {
   const router = useRouter();
@@ -92,16 +93,19 @@ export default function DashBOARD() {
 
     {/* Driver View Component Placeholder */}
     {userRole?.toLowerCase() === 'driver' && (
+       //here i will add the driver view component when it is ready
       <div className="rounded-3xl bg-white/95 backdrop-blur-xl p-6 sm:p-8 shadow-xl shadow-[#162B22]/5 border border-[#162B22]/10">
         <div className="flex items-start gap-4">
           <span className="p-3 bg-amber-50 rounded-2xl text-amber-600 border border-amber-100/80 text-xl shrink-0">
             🚚
           </span>
           <div>
+
             <h2 className="text-lg sm:text-xl font-black text-slate-900">Driver Delivery Workspace</h2>
             <p className="text-xs sm:text-sm text-stone-500 mt-1 leading-relaxed">
               Driver specific routes and controls go here.
             </p>
+            <DriverView />
           </div>
         </div>
       </div>

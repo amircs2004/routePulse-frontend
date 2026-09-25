@@ -139,11 +139,11 @@ useEffect(() => {
                       </button>
                       
                       <button 
-                        onClick={(e) => handleAddToCart(e, productId)}
+                        onClick={(e) => handleAddToCart(e, Number(productId))}
                         className="text-xs font-bold text-[#162B22] bg-[#162B22]/5 px-2.5 py-1.5 rounded-xl hover:bg-[#162B22] hover:text-white transition-all duration-300"
                       >
                         Add &rarr;
-                      </button>
+                      </button> 
                     </div>
                   </div>
                 </div>
@@ -193,7 +193,7 @@ useEffect(() => {
             <div className="flex gap-3 pt-2">
               <button
                 onClick={(e) => {
-                  handleAddToCart(e, selectedProduct.id || selectedProduct._id);
+                  handleAddToCart(e, Number(selectedProduct.id || selectedProduct._id));
                   setSelectedProduct(null);
                 }}
                 className="flex-1 rounded-2xl bg-[#162B22] py-3 text-sm font-bold text-white hover:bg-[#11221b] transition-colors shadow-md"

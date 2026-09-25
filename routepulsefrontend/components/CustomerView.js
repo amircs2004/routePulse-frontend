@@ -55,15 +55,18 @@ export default function CustomerDashboard() {
       setLoading(true);
 
       const productId = product._id || product.id;
+      console.log("🔍 DEBUG Frontend - Raw ID:", productId, "Type:", typeof productId);
+      console.log("🔍 DEBUG Frontend - Full Product Object:", product);
+      /*
       const productPayload = {
-        productId: productId,
+        productId: Number(productId),
         title: product.title,
         price: product.price,
         thumbnail: product.thumbnail || product.images?.[0],
         category: product.category,
       };
-
-      await addProductToOrder(productPayload);
+*/
+      await addProductToOrder(Number(productId));
       alert("ok");
 
       setSelectedProduct(null);

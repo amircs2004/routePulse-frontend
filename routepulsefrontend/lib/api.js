@@ -43,7 +43,7 @@ const login = async (data) => {
 }
  
 
-export  const addProductToOrder = async (ProductData) => {
+export  const addProductToOrder = async (productId) => {
     try {
        const token = sessionStorage.getItem('token')
         const response = await fetch(`${process.env.url_base}/api/add-product` , { 
@@ -52,7 +52,7 @@ export  const addProductToOrder = async (ProductData) => {
                 'Content-Type': 'application/json',
                 'Authorization' : `Bearer ${token}` 
             },
-            body : JSON.stringify(ProductData)
+            body: JSON.stringify({ productId: Number(productId) })
         })
 
         if (response.status === 401) {
