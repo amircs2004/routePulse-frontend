@@ -7,7 +7,8 @@ import {
 } from "../lib/productsApi";
 import { addProductToOrder, deleteProductFromOrderApi } from "../lib/api";
 import CategoryFilter from "../components/categoryFilter";
-import PromoBanner from "../components/PromoBanner";
+import PromoBanner from "../components/PromoBanner"; 
+
 
 
 export default function CustomerDashboard() {
@@ -245,6 +246,7 @@ export default function CustomerDashboard() {
               >
                 Go Back
               </button>
+            
             </div>
           </div>
         </div>
