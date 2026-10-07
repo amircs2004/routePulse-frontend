@@ -1,10 +1,20 @@
 'use client' 
-//this page will be the fronend of settingd /changing profile settings
+import { useAuth } from '../../../context/AuthProvider';
 
 export default function setting () {
+   const { user, loading } = useAuth(); 
+  if (loading) {
+    return (
+      <div className="p-8 text-stone-500 text-sm">
+        Loading profile settings...
+      </div>
+    );
+  }
+  const userRole = user?.role?.trim();
   return (
-      
-      <p>soon ur be able to see ur change ur profile settingds </p>
+        <div>
+          {userRole === "Customer" ? <p>Customer settings</p> : userRole === "Driver" ? <p>Driver settings</p> : <p>Invalid user role</p>}
+        </div>
   )
 
 }

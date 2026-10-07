@@ -10,6 +10,7 @@ import GroceryCartIllustration from "../../components/customerDrawings/GroceryCa
 import ShoppingLifestyleIllustration from "../../components/customerDrawings/ShoppingLifestyleIllustration";
 import SettingsIllustration from "../../components/customerDrawings/SettingsIllustration";
 import TruckDriverIllustration from "../../components/customerDrawings/TruckDriverIllustration";
+import LiveTrackingMap from "../../components/customerDrawings/LiveTrackingMap";
 
 export default function DashBOARD() {
   const router = useRouter();
@@ -20,6 +21,12 @@ export default function DashBOARD() {
 
   useEffect(() => {
     startTransition(async () => {
+      {
+        /*
+         first why are you calling an api directally in an UI component? you should call it in a helper function and then call that helper function in the componnt!
+         
+        */
+      }
       const responce = await getUser();
 
       console.log("Full API Response:", responce);
@@ -221,6 +228,14 @@ export default function DashBOARD() {
                         />
                       </svg>
                     </Link>
+                  </div>
+                  <div className="max-w-7xl mx-auto px-6 w-full flex justify-end pb-12">
+                    <div className="w-80 space-y-2">
+                      <p className="text-xs font-semibold tracking-wider text-stone-400 uppercase text-right">
+                        Track Delivery
+                      </p>
+                      <LiveTrackingMap />
+                    </div>
                   </div>
                 </div>
               </div>

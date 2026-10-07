@@ -149,3 +149,54 @@ export const confirmOrder = async (orderDetails) => {
     }
 }
 
+
+export const getlNeasestOrder = async (lng, lat) => {
+    try{
+        const token = sessionStorage.getItem('token')
+     const responce = await fetch(`${process.env.url_base}/api/nearest-order` , {
+        method : 'POST' , 
+        headers : {
+            'Content-Type' : 'application/json' , 
+            'Authorization' : `Bearer ${token}`
+        } ,
+        body : JSON.stringify({
+            lng : Number(lng) ,
+            lat : Number(lat)
+        }) 
+     })
+     const data = await responce.json()
+     return data
+    }catch(error){
+
+    }
+} 
+
+export const assigneDriverApi = async (orderId) => {
+    try {
+     const token = sessionStorage.getItem('token')
+        
+        
+        const response = await fetch(`${process.env.url_base}/api/assign-driver`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                _id: orderId 
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to assign driver');
+        }
+
+        const data = await response.json();
+        return data;
+        
+    } catch (error) {
+        console.error('Error in assigneDriverApi:', error);
+        throw error;
+    }
+};
