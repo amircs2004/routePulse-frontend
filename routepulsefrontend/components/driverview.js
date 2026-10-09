@@ -6,18 +6,17 @@ import AccountSetupIllustration from "./driver/AccountSetupIllustration";
 import UpdateLocation from "./driverMethods/addLocation";
 import { getUser } from "../lib/api";
 import Link from "next/link";
-import MapIllustration from './driver/MapIllustration'
+import MapIllustration from "./driver/MapIllustration";
 
 export default function DriverView() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [driver, setDriver] = useState({
     name: "Loading...",
     email: "",
     phoneNumber: "",
-    Car: "",
+    Car: "",  
     status: "Offline",
   });
-
 
   const getUserInfos = async () => {
     try {
@@ -119,28 +118,28 @@ export default function DriverView() {
                 Finalize
               </span>
             </div>
-            <div className="w-full overflow-hidden rounded-3xl bg-[#FAFBF9] p-3 border border-stone-100 transition-all duration-300 group-hover:shadow-md">
-              <AccountSetupIllustration className="w-full h-auto transition-transform duration-500 group-hover:scale-105" />
-            </div>
+            <Link href="/dashboard/driver_orders" className="group block w-full">
+              <div className="w-full overflow-hidden rounded-3xl bg-[#FAFBF9] p-3 border border-stone-100 transition-all duration-300 group-hover:shadow-md">
+                <AccountSetupIllustration className="w-full h-auto transition-transform duration-500 group-hover:scale-105" />
+              </div>
+            </Link>
             <div className="p-8 max-w-4xl mx-auto space-y-6">
-             
               <p className="text-stone-500 text-sm">
                 drop off your location and get nearsest order
               </p>
 
               {/* Button to pop up the UpdateLocation view */}
-               <div className="bg-white p-6 rounded-3xl border border-stone-200 shadow-sm space-y-6 max-w-md mx-auto flex flex-col items-center text-center">
-              <div className="w-full overflow-hidden rounded-2xl border border-stone-100 shadow-inner">
-               <MapIllustration/>
+              <div className="bg-white p-6 rounded-3xl border border-stone-200 shadow-sm space-y-6 max-w-md mx-auto flex flex-col items-center text-center">
+                <div className="w-full overflow-hidden rounded-2xl border border-stone-100 shadow-inner">
+                  <MapIllustration />
+                </div>
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="bg-[#FF6B35] hover:bg-[#e05a2b] text-white font-semibold py-3 px-6 rounded-2xl transition shadow-sm text-sm cursor-pointer"
+                >
+                  Launch Location Updater
+                </button>
               </div>
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="bg-[#FF6B35] hover:bg-[#e05a2b] text-white font-semibold py-3 px-6 rounded-2xl transition shadow-sm text-sm cursor-pointer"
-              >
-                Launch Location Updater 
-              </button>
-
-               </div>
 
               {/* Modal Popup Overlay */}
               {isModalOpen && (

@@ -200,3 +200,23 @@ export const assigneDriverApi = async (orderId) => {
         throw error;
     }
 };
+
+export const getDriversOrdersApi = async () => {
+    try {
+     const token = sessionStorage.getItem('token')
+     const response = await fetch(`${process.env.url_base}/api/get_orders`, {
+        method : 'GET' , 
+        headers : {
+            'Content-Type' : 'application/json' ,
+            'Authorization' : `Bearer ${token}`
+        }
+    })
+    if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || `Failed to fetch orders: ${response.statusText}`);
+        }
+       return await response.json()
+    }catch(error){
+     console.log('error at getting the drivers orders');
+    }
+}
