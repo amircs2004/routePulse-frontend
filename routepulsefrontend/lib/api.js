@@ -1,222 +1,240 @@
-
-
-export const  register = async (data) => {
- try {
+export const register = async (data) => {
+  try {
     const responce = await fetch(`${process.env.url_base}/api/register`, {
-        method : 'POST' , 
-       headers : {
-        'Content-Type' : 'application/json' ,
-    } ,
-    credentials : 'include' ,
-       body : JSON.stringify(data)
-
-    })
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
     if (!responce.ok) {
-         console.log('error at fetching');
+      console.log("error at fetching");
     }
-    const result = await responce.json()
-    return result
- } catch (error) {
-    console.log('big ahhhhhhhhhhhhhh problem bruhhhhhhhhhhhhhh');
- }
-}
+    const result = await responce.json();
+    return result;
+  } catch (error) {
+    console.log("big ahhhhhhhhhhhhhh problem bruhhhhhhhhhhhhhh");
+  }
+};
 export const getUser = async () => {
-    try {
-        const  token = sessionStorage.getItem('token')
+  try {
+    const token = sessionStorage.getItem("token");
 
-        const responce = await fetch(`${process.env.url_base}/api/user` , {
-            method : 'GET' , 
-            headers : {
-                 'Content-Type' : 'application/json' ,
-                'Authorization' : `Bearer ${token}`
-            }
-        })
-        const result  =  await responce.json()
-        return result 
-    } catch (error) {
-           console.log('big ahhhhhhhhhhhhhh problem bruhhhhhhhhhhhhhh');
+    const responce = await fetch(`${process.env.url_base}/api/user`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const result = await responce.json();
+    return result;
+  } catch (error) {
+    console.log("big ahhhhhhhhhhhhhh problem bruhhhhhhhhhhhhhh");
+  }
+};
+
+const login = async (data) => {};
+
+export const addProductToOrder = async (productId) => {
+  try {
+    const token = sessionStorage.getItem("token");
+    const response = await fetch(`${process.env.url_base}/api/add-product`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ productId: Number(productId) }),
+    });
+
+    if (response.status === 401) {
+      // Token expired or invalid -> clear session and redirect
+      sessionStorage.removeItem("token");
+      window.location.href = "/auth/log";
+      throw new Error("Token expired. Please log in again.");
     }
-}
-
-const login = async (data) => {
-
-}
- 
-
-export  const addProductToOrder = async (productId) => {
-    try {
-       const token = sessionStorage.getItem('token')
-        const response = await fetch(`${process.env.url_base}/api/add-product` , { 
-            method : 'POST' ,
-            headers : {
-                'Content-Type': 'application/json',
-                'Authorization' : `Bearer ${token}` 
-            },
-            body: JSON.stringify({ productId: Number(productId) })
-        })
-
-        if (response.status === 401) {
-        // Token expired or invalid -> clear session and redirect
-        sessionStorage.removeItem('token');
-        window.location.href = '/auth/log';
-        throw new Error('Token expired. Please log in again.');
-    }
-    const data = await response.json(); 
-    return data 
-    } catch (error) {
-        console.log(error);
-    }
-}
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const deleteProductFromOrderApi = async (productId) => {
-    try {
-      const token = sessionStorage.getItem('token') 
-      const response = await fetch(`${process.env.url_base}/api/delete-product/${productId}`, {
-        method: 'DELETE',
+  try {
+    const token = sessionStorage.getItem("token");
+    const response = await fetch(
+      `${process.env.url_base}/api/delete-product/${productId}`,
+      {
+        method: "DELETE",
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-      if (!response.ok) {
-        throw new Error('Error deleting product from order');
-      }
-      if (response.status === 401) {
-        // Token expired or invalid -> clear session and redirect
-        sessionStorage.removeItem('token');
-        window.location.href = '/auth/log';
-        throw new Error('Token expired. Please log in again.');
-      }
-        const data = await response.json();
-        return data;
-    }catch(error) {
-        console.log(error);
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    if (!response.ok) {
+      throw new Error("Error deleting product from order");
     }
-}
+    if (response.status === 401) {
+      // Token expired or invalid -> clear session and redirect
+      sessionStorage.removeItem("token");
+      window.location.href = "/auth/log";
+      throw new Error("Token expired. Please log in again.");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const getAllOrders = async () => {
-    try{
-        const token = sessionStorage.getItem('token')
-    const response = await fetch(`${process.env.url_base}/api/get-orders` , {
-        method : 'GET' , 
-        headers : {
-            'Content-Type' : 'application/json' , 
-            'Authorization' : `Bearer ${token}`
-        }
-    })
-    const data = await response.json()
-    return data
-    }catch(error){
+  try {
+    const token = sessionStorage.getItem("token");
+    const response = await fetch(`${process.env.url_base}/api/get-orders`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
     console.log(error);
-    }
-}
+  }
+};
 
-export const handleUpdateQuantity = async (productid , orderId , change) => {
-    try{
-        const token = sessionStorage.getItem('token')
-     const response = await fetch(`${process.env.url_base}/api/update-product-quantity/${productid}` , {
-        method:'PATCH' , 
-         headers : {
-            'Content-Type' : 'application/json' ,
-            'Authorization' : `Bearer ${token}`
-         },
-        body : JSON.stringify({ orderId , change})
-        })
-        if (!response.ok) {
-            throw new Error('Failed to update quantity');
-        }
-        const data = await response.json()
-         return data 
-    }catch(error){
-        console.log(error);
-        console.log('error at updaing the the quantity probabmy server side error ');
-        
+export const handleUpdateQuantity = async (productid, orderId, change) => {
+  try {
+    const token = sessionStorage.getItem("token");
+    const response = await fetch(
+      `${process.env.url_base}/api/update-product-quantity/${productid}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ orderId, change }),
+      },
+    );
+    if (!response.ok) {
+      throw new Error("Failed to update quantity");
     }
-}
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+    console.log(
+      "error at updaing the the quantity probabmy server side error ",
+    );
+  }
+};
 export const confirmOrder = async (orderDetails) => {
-    try {
-     const token = sessionStorage.getItem('token')
-     const response = await fetch(`${process.env.url_base}/api/confirm-order` , {
-        method : 'POST' , 
-        headers : {
-            'Content-Type' : 'application/json' ,
-            'Authorization' : `Bearer ${token}`
-        } ,
-        body : JSON.stringify(orderDetails)
-     })
-     return await response.json()
-    }catch(error){
-        console.log("Confirm Order Frontend Error:", error);
-    }
-}
-
+  try {
+    const token = sessionStorage.getItem("token");
+    const response = await fetch(`${process.env.url_base}/api/confirm-order`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(orderDetails),
+    });
+    return await response.json();
+  } catch (error) {
+    console.log("Confirm Order Frontend Error:", error);
+  }
+};
 
 export const getlNeasestOrder = async (lng, lat) => {
-    try{
-        const token = sessionStorage.getItem('token')
-     const responce = await fetch(`${process.env.url_base}/api/nearest-order` , {
-        method : 'POST' , 
-        headers : {
-            'Content-Type' : 'application/json' , 
-            'Authorization' : `Bearer ${token}`
-        } ,
-        body : JSON.stringify({
-            lng : Number(lng) ,
-            lat : Number(lat)
-        }) 
-     })
-     const data = await responce.json()
-     return data
-    }catch(error){
-
-    }
-} 
+  try {
+    const token = sessionStorage.getItem("token");
+    const responce = await fetch(`${process.env.url_base}/api/nearest-order`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        lng: Number(lng),
+        lat: Number(lat),
+      }),
+    });
+    const data = await responce.json();
+    return data;
+  } catch (error) {}
+};
 
 export const assigneDriverApi = async (orderId) => {
-    try {
-     const token = sessionStorage.getItem('token')
-        
-        
-        const response = await fetch(`${process.env.url_base}/api/assign-driver`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                _id: orderId 
-            })
-        });
+  try {
+    const token = sessionStorage.getItem("token");
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to assign driver');
-        }
+    const response = await fetch(`${process.env.url_base}/api/assign-driver`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        _id: orderId,
+      }),
+    });
 
-        const data = await response.json();
-        return data;
-        
-    } catch (error) {
-        console.error('Error in assigneDriverApi:', error);
-        throw error;
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to assign driver");
     }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error in assigneDriverApi:", error);
+    throw error;
+  }
 };
 
 export const getDriversOrdersApi = async () => {
-    try {
-     const token = sessionStorage.getItem('token')
-     const response = await fetch(`${process.env.url_base}/api/get_orders`, {
-        method : 'GET' , 
-        headers : {
-            'Content-Type' : 'application/json' ,
-            'Authorization' : `Bearer ${token}`
-        }
-    })
+  try {
+    const token = sessionStorage.getItem("token");
+    const response = await fetch(`${process.env.url_base}/api/get_orders`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
     if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.message || `Failed to fetch orders: ${response.statusText}`);
-        }
-       return await response.json()
-    }catch(error){
-     console.log('error at getting the drivers orders');
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.message || `Failed to fetch orders: ${response.statusText}`,
+      );
     }
-}
+    return await response.json();
+  } catch (error) {
+    console.log("error at getting the drivers orders");
+  }
+};
+
+export const getAssignedDriverForClient = async (orderId) => {
+  try {
+    const token = sessionStorage.getItem("token");
+    const response = await fetch(`${process.env.url_base}/api/see-driver`, {
+      headers: {
+        method: "POST",
+        Authorization: ` Bearer ${token}`,
+      },
+      body: JSON.stringify(orderId),
+    });
+    if (!response.ok) {
+      console.log("error at fetching the assigned driver");
+    }
+    return response.json();
+  } catch (error) {
+    console.log("error at getting the drivers orders");
+  }
+};
+
